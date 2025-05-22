@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/app/Dockerfile
+    container_name: fastapi_app
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_HOST=0.0.0.0
+      - APP_PORT=8000
+      - DEBUG=False
+      - WORKERS_COUNT=4
+      - WORKER_CONNECTIONS=1000
+      - KEEPALIVE=5
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=fastapi
+      - DB_PASSWORD=fastapi123
+      - DB_NAME=fastapi_db
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - REDIS_PASSWORD=redis123
+    volumes:
+      - ../logs:/app/logs
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - fastapi_network
+
+  mysql:
+    image: mysql:8.0
+    container_name: fastapi_mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_DATABASE=fastapi_db
+      - MYSQL_USER=fastapi
+      - MYSQL_PASSWORD=fastapi123
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    ports:
+      - "13306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - fastapi_network
+
+  redis:
+    image: redis:7.0
+    container_name: fastapi_redis
+    restart: always
+    command: redis-server --requirepass redis123
+    volumes:
+      - ./redis_data:/data
+    ports:
+      - "16379:6379"
+    networks:
+      - fastapi_network
+
+
+networks:
+  fastapi_network:
+    driver: bridge 

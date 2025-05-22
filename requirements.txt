@@ -1,0 +1,13 @@
+fastapi==0.104.1
+uvicorn==0.24.0
+tortoise-orm==0.20.0
+aiomysql==0.2.0
+redis==5.0.1
+aioredis==2.0.1
+python-dotenv==1.0.0
+loguru==0.7.2
+pydantic==2.4.2
+pydantic-settings==2.0.3
+uvloop==0.19.0; sys_platform != "win32"  # 高性能事件循环
+httptools==0.6.1  # 高性能HTTP解析器
+gunicorn==21.2.0  # 生产环境WSGI服务器 
