@@ -15,7 +15,7 @@ spec:
       imagePullSecrets:
       - name: harbor  # 用于拉取私有镜像的 Secret
       containers:
-      - name: infer-api
+      - name: demo
         image: demo
         command: ["gunicorn"]
         args:
